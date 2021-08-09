@@ -4,6 +4,7 @@ import com.baidyanath.api.restd.configs.PATH_SHOULD_START_WITH_API_AND_VERSION
 import com.baidyanath.api.restd.domain.BasePathConventionRequest
 
 object BasePathConvention: Rule<BasePathConventionRequest> {
+
     override fun check(request: BasePathConventionRequest) {
         request.endPoints.forEach {
             val (isValid, pathName, error) = checkBasePathConvention(it, request.version)

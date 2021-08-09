@@ -25,7 +25,7 @@
     }
   ],
   "paths": {
-    "/api/v1/users": {
+    "/users": {
       "post": {
         "summary": "Create user",
         "description": "Creates a new user.<p>Requires ADMINISTRATOR [64] user permissions. See <a href=\"/docs/permissions\">Permissions</a>.</p>",
