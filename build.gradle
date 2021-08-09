@@ -4,6 +4,8 @@ version '1.0-SNAPSHOT'
 buildscript {
     // Core dependencies
     ext.kotlinVersion = '1.3.61'
+    ext.klaxonVersion = '5.5'
+    ext.jacksonVersion = '2.11.1'
 
     // Test dependencies
     ext.shadowVersion = '5.2.0'
@@ -55,9 +57,10 @@ shadowJar {
 sourceCompatibility = 1.8
 
 dependencies {
-    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: kotlinVersion
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
-    implementation 'com.beust:klaxon:5.5'
+    implementation "com.beust:klaxon:$klaxonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
 }
 
 compileKotlin {

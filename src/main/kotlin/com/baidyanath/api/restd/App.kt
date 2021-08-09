@@ -5,6 +5,7 @@ import com.baidyanath.api.restd.domain.BaseEntityRequest
 import com.baidyanath.api.restd.domain.BasePathConventionRequest
 import com.baidyanath.api.restd.rules.BaseEntity
 import com.baidyanath.api.restd.rules.BasePathConvention
+import com.baidyanath.api.restd.utils.display.DisplayInFile
 import com.baidyanath.api.restd.utils.display.DisplayResult
 
 fun main(args: Array<String>) {
@@ -14,7 +15,6 @@ fun main(args: Array<String>) {
 
     val result = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     // val path = "src/main/resources/swagger-sample.json"
-    println(args[0])
 
     val endPoints = Service.parseJson(args[0])
     val version = 1
@@ -28,5 +28,7 @@ fun main(args: Array<String>) {
 
     // Display Result
     DisplayResult.run(result)
+    DisplayInFile.run(result)
 }
+
 
