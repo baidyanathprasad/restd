@@ -3,6 +3,7 @@ package com.baidyanath.api.restd
 import com.baidyanath.api.restd.data.Service
 import com.baidyanath.api.restd.domain.BaseEntityRequest
 import com.baidyanath.api.restd.domain.BasePathConventionRequest
+import com.baidyanath.api.restd.domain.ErrorResponse
 import com.baidyanath.api.restd.rules.BaseEntity
 import com.baidyanath.api.restd.rules.BasePathConvention
 import com.baidyanath.api.restd.utils.display.DisplayInFile
@@ -13,7 +14,7 @@ fun main(args: Array<String>) {
         throw RuntimeException("Path must be present to run the project")
     }
 
-    val result = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
+    val result = mutableMapOf<String, MutableMap<String, MutableList<ErrorResponse>>>()
     // val path = "src/main/resources/swagger-sample.json"
 
     val endPoints = Service.parseJson(args[0])

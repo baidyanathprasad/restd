@@ -2,11 +2,12 @@ package com.baidyanath.api.restd.utils.display
 
 import com.baidyanath.api.restd.configs.ANSI_RED
 import com.baidyanath.api.restd.configs.ANSI_WHITE
+import com.baidyanath.api.restd.domain.ErrorResponse
 import com.baidyanath.api.restd.utils.calculation.CalculateError
 
-object DisplayResult : Display<Map<String, Map<String, List<String>>>> {
+object DisplayResult : Display<Map<String, Map<String, List<ErrorResponse>>>> {
 
-    override fun run(result: Map<String, Map<String, List<String>>>) {
+    override fun run(result: Map<String, Map<String, List<ErrorResponse>>>) {
         val totalErrors = CalculateError.run(result)
 
         println("\n\t\t--------------------------------------------------")

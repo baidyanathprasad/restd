@@ -2,6 +2,8 @@ package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.ENTITY_NAME_NOT_FOUND
 import com.baidyanath.api.restd.domain.BaseEntityRequest
+import com.baidyanath.api.restd.domain.ErrorResponse
+import com.baidyanath.api.restd.domain.ErrorType
 
 object BaseEntity: Rule<BaseEntityRequest> {
 
@@ -16,10 +18,15 @@ object BaseEntity: Rule<BaseEntityRequest> {
                     request.result["path"] = ruleTypesMap
                 }
                 var errors = ruleTypesMap[pathName]
+                val errorResponse = ErrorResponse(
+                    description = error,
+                    type = ErrorType.HIGH
+                )
+
                 if (errors == null) {
-                    errors = mutableListOf(error)
+                    errors = mutableListOf(errorResponse)
                 } else {
-                   errors.add(error)
+                   errors.add(errorResponse)
                 }
                 ruleTypesMap[pathName] = errors
 
@@ -33,7 +40,7 @@ object BaseEntity: Rule<BaseEntityRequest> {
         val basePath = "/api/v$version/"
         path.replace(basePath, "")
 
-        val entityName = path.split("/")[0]
+        val entityName = path.split("/")[1].trim()
         if (entityName.isNotEmpty()) {
             return Triple(true,  path, "")
         }

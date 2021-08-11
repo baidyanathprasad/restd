@@ -2,6 +2,8 @@ package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.PATH_SHOULD_START_WITH_API_AND_VERSION
 import com.baidyanath.api.restd.domain.BasePathConventionRequest
+import com.baidyanath.api.restd.domain.ErrorResponse
+import com.baidyanath.api.restd.domain.ErrorType
 
 object BasePathConvention: Rule<BasePathConventionRequest> {
 
@@ -17,11 +19,18 @@ object BasePathConvention: Rule<BasePathConventionRequest> {
                 }
 
                 var errors = ruleTypesMap[pathName]
-                if (errors == null) {
-                    errors = mutableListOf(error)
-                }
-                ruleTypesMap[pathName] = errors
+                val errorResponse = ErrorResponse(
+                    description = error,
+                    type = ErrorType.HIGH
+                )
 
+                if (errors == null) {
+                    errors = mutableListOf(errorResponse)
+                } else {
+                   errors.add(errorResponse)
+                }
+
+                ruleTypesMap[pathName] = errors
                 request.result["path"] = ruleTypesMap
             }
         }
