@@ -16,6 +16,7 @@ fun main(args: Array<String>) {
 
     val result = mutableMapOf<String, MutableMap<String, MutableList<ErrorResponse>>>()
     // val path = "src/main/resources/swagger-sample.json"
+    // val url = http://localhost:8000/swagger-sample.json
 
     val endPoints = Service.parseJson(args[0])
     val version = 1
