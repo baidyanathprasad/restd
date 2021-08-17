@@ -25,8 +25,8 @@ pipeline {
                     errorsCount = jsonData.errors.count
 
                     if(errorsCount.size > 0) {
-                        error("There are some error w.r.t API standardization: $errorsCount, See the console log for
-                         more details.")
+                        message = "There are some error w.r.t API standardization: $errorsCount, See the console log for details."
+                        error(message)
                     }
                 }
             }
