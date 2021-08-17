@@ -24,6 +24,7 @@ pipeline {
                     jsonData = readJSON file: "result.json"
                     errorsCount = jsonData.errors.count
 
+                    echo "Errors Count: $errorsCount"
                     if(errorsCount.size > 0) {
                         message = "There are some error w.r.t API standardization: $errorsCount, See the console log for details."
                         error(message)
