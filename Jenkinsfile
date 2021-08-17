@@ -20,6 +20,14 @@ pipeline {
                     url = "http://localhost:8000/swagger-sample.json"
                     echo "Lint Checking.."
                     sh "java -jar build/libs/restd-1.0-SNAPSHOT-all.jar $url"
+
+                    jsonData = readJSON file: "result.json"
+                    errorsCount = jsonData.errors.count
+
+                    if(errorsCount.size > 0) {
+                        error("There are some error w.r.t API standardization: $errorsCount\n See the console log for
+                         more details.")
+                    }
                 }
             }
         }
