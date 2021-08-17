@@ -15,10 +15,12 @@ pipeline {
             }
         }
         stage('Lint Check') {
-            url = 'http://localhost:8000/swagger-sample.json'
             steps {
-                echo "Lint Checking.."
-                sh "java -jar build/libs/restd-1.0-SNAPSHOT-all.jar $url"
+                script {
+                    url = "http://localhost:8000/swagger-sample.json"
+                    echo "Lint Checking.."
+                    sh "java -jar build/libs/restd-1.0-SNAPSHOT-all.jar $url"
+                }
             }
         }
         stage('Deploy') {
