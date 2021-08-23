@@ -5,6 +5,9 @@ import com.baidyanath.api.restd.domain.BasePathConventionRequest
 import com.baidyanath.api.restd.domain.ErrorResponse
 import com.baidyanath.api.restd.domain.ErrorType
 
+/**
+ * All the path should start with the /api/v<version>
+ */
 object BasePathConvention: Rule<BasePathConventionRequest> {
 
     override fun check(request: BasePathConventionRequest) {

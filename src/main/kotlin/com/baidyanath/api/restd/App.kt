@@ -21,18 +21,22 @@ fun main(args: Array<String>) {
     val endPoints = Service.parseJson(args[0])
     val version = 1
 
-    // Check first rule in naming convention
-    val basePathConventionRequest = BasePathConventionRequest(result, endPoints, version)
-    BasePathConvention.check(basePathConventionRequest)
+    if(endPoints.isEmpty()) {
+        println("No End Points Found")
+        return
+    } else {
+        // Check first rule in naming convention
+        val basePathConventionRequest = BasePathConventionRequest(result, endPoints, version)
+        BasePathConvention.check(basePathConventionRequest)
 
-    val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
-    BaseEntity.check(baseEntityRequest)
+        val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
+        BaseEntity.check(baseEntityRequest)
+    }
 
     // Display Result
     DisplayResult.run(result)
 
     val totalErrors = CalculateError.run(result)
-
     result["errors"] = mutableMapOf("count" to mutableListOf<Any>(totalErrors))
     DisplayInFile.run(result)
 }
