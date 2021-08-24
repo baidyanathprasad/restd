@@ -5,6 +5,7 @@ import com.baidyanath.api.restd.domain.BaseEntityRequest
 import com.baidyanath.api.restd.domain.BasePathConventionRequest
 import com.baidyanath.api.restd.rules.BaseEntity
 import com.baidyanath.api.restd.rules.BasePathConvention
+import com.baidyanath.api.restd.rules.LowerCase
 import com.baidyanath.api.restd.utils.calculation.CalculateError
 import com.baidyanath.api.restd.utils.display.DisplayInFile
 import com.baidyanath.api.restd.utils.display.DisplayResult
@@ -31,6 +32,8 @@ fun main(args: Array<String>) {
 
         val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
         BaseEntity.check(baseEntityRequest)
+
+        LowerCase.check(baseEntityRequest)
     }
 
     // Display Result
