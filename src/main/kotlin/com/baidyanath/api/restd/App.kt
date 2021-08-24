@@ -16,26 +16,36 @@ fun main(args: Array<String>) {
     }
 
     val result = mutableMapOf<String, MutableMap<String, MutableList<Any>>>()
+
     // val path = "src/main/resources/swagger-sample.json"
     // val url = http://localhost:8000/swagger-sample.json
 
-    val endPoints = Service.parseJson(args[0])
-    val version = 1
-
+    val (endPoints, version) = Service.parseJson(args[0]) to 1 // version as 1
     if(endPoints.isEmpty()) {
         println("No End Points Found")
         return
-    } else {
-        // Check first rule in naming convention
-        val basePathConventionRequest = BasePathConventionRequest(result, endPoints, version)
-        BasePathConvention.check(basePathConventionRequest)
-
-        val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
-        BaseEntity.check(baseEntityRequest)
-
-        LowerCase.check(baseEntityRequest)
     }
 
+    applyRules(result = result, endPoints = endPoints, version = version)
+    displayResult(result = result)
+}
+
+private fun applyRules(
+    result: MutableMap<String, MutableMap<String, MutableList<Any>>>,
+    endPoints: Set<String>,
+    version: Int
+) {
+    // Check first rule in naming convention
+    val basePathConventionRequest = BasePathConventionRequest(result, endPoints, version)
+    BasePathConvention.check(basePathConventionRequest)
+
+    val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
+    BaseEntity.check(baseEntityRequest)
+
+    LowerCase.check(baseEntityRequest)
+}
+
+private fun displayResult(result: MutableMap<String, MutableMap<String, MutableList<Any>>>) {
     // Display Result
     DisplayResult.run(result)
 
