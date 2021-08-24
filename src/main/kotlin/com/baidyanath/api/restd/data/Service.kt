@@ -10,14 +10,19 @@ object Service {
 
     private var result: API? = null
     fun parseJson(path: String): Set<String> {
-        val url = URL(path)
-        val file = File("swagger-sample.json")
+        return try {
+            val url = URL(path)
+            val file = File("swagger-sample.json")
 
-        FileUtils.copyURLToFile(url, file)
-        val result = Klaxon().parse<API>(file)
+            FileUtils.copyURLToFile(url, file)
+            result = Klaxon().parse<API>(file)
 
-        file.deleteOnExit()
-        return result?.endPoints!!
+            file.deleteOnExit()
+            result?.endPoints!!
+        } catch (e: Exception) {
+            println("Error: There is some issue in JSON input: ${e.localizedMessage}")
+            emptySet()
+        }
     }
 }
 

@@ -1,49 +1,58 @@
 package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.ENTITY_NAME_NOT_FOUND
-import com.baidyanath.api.restd.domain.BaseEntityRequest
-import com.baidyanath.api.restd.domain.ErrorResponse
-import com.baidyanath.api.restd.domain.ErrorType
+import com.baidyanath.api.restd.configs.ENTITY_NAME_SHOULD_BE_PLURAL
+import com.baidyanath.api.restd.domain.Request
+import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 
-object BaseEntity: Rule<BaseEntityRequest> {
+/**
+ * Basic Entity check for in the end points.
+ */
+object BaseEntity: Rule<Request> {
 
-    override fun check(request: BaseEntityRequest) {
+    override fun check(request: Request) {
         request.endPoints.forEach {
-            val (isValid, pathName, error) = checkEntityNamePresent(it, request.version)
+            val (isValid, pathName, currentErrors) = checkEntityNamePresent(it, request.version)
 
             if (!isValid) {
-                var ruleTypesMap = request.result["path"]
-                if (ruleTypesMap == null) {
-                    ruleTypesMap = mutableMapOf()
-                    request.result["path"] = ruleTypesMap
-                }
-                var errors = ruleTypesMap[pathName]
-                val errorResponse = ErrorResponse(
-                    description = error,
-                    type = ErrorType.HIGH
+                ResultStoreImpl.add(
+                    request = request,
+                    errors = currentErrors.toSet(),
+                    type = "path",
+                    value = pathName
                 )
-
-                if (errors == null) {
-                    errors = mutableListOf(errorResponse)
-                } else {
-                   errors.add(errorResponse)
-                }
-                ruleTypesMap[pathName] = errors
-
-                request.result["path"] = ruleTypesMap
             }
         }
     }
 
-    // Rules check that starts with /api/v1/<entities>
-    private fun checkEntityNamePresent(path: String, version: Int): Triple<Boolean, String, String> {
+    /**
+     * Rules check that starts with /api/v1/<entities>
+      */
+    private fun checkEntityNamePresent(path: String, version: Int): Triple<Boolean, String, MutableList<String>> {
         val basePath = "/api/v$version/"
         path.replace(basePath, "")
-
         val entityName = path.split("/")[1].trim()
-        if (entityName.isNotEmpty()) {
-            return Triple(true,  path, "")
+
+        val isPlural = checkPlurality(entityName = entityName)
+        val errors = mutableListOf<String>()
+
+        if (!isPlural) {
+            errors.add(ENTITY_NAME_SHOULD_BE_PLURAL)
         }
-        return Triple(false, path, ENTITY_NAME_NOT_FOUND)
+
+        if (entityName.isNotEmpty()) {
+            return Triple(true,  path, errors)
+        }
+        errors.add(ENTITY_NAME_NOT_FOUND)
+
+        return Triple(false, path, errors)
+    }
+
+    private fun checkPlurality(entityName: String): Boolean {
+        if (entityName.isEmpty()) {
+            return false
+        }
+
+        return !(entityName.endsWith("s") || entityName.endsWith("es"))
     }
 }

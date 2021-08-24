@@ -1,37 +1,25 @@
 package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.PATH_SHOULD_START_WITH_API_AND_VERSION
-import com.baidyanath.api.restd.domain.BasePathConventionRequest
-import com.baidyanath.api.restd.domain.ErrorResponse
-import com.baidyanath.api.restd.domain.ErrorType
+import com.baidyanath.api.restd.domain.Request
+import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 
-object BasePathConvention: Rule<BasePathConventionRequest> {
+/**
+ * All the path should start with the /api/v<version>
+ */
+object BasePathConvention: Rule<Request> {
 
-    override fun check(request: BasePathConventionRequest) {
+    override fun check(request: Request) {
         request.endPoints.forEach {
             val (isValid, pathName, error) = checkBasePathConvention(it, request.version)
 
             if (!isValid) {
-                var ruleTypesMap = request.result["path"]
-                if (ruleTypesMap == null) {
-                    ruleTypesMap = mutableMapOf()
-                    request.result["path"] = ruleTypesMap
-                }
-
-                var errors = ruleTypesMap[pathName]
-                val errorResponse = ErrorResponse(
-                    description = error,
-                    type = ErrorType.HIGH
+                ResultStoreImpl.add(
+                    request = request,
+                    errors = setOf(error),
+                    type = "path",
+                    value = pathName
                 )
-
-                if (errors == null) {
-                    errors = mutableListOf(errorResponse)
-                } else {
-                   errors.add(errorResponse)
-                }
-
-                ruleTypesMap[pathName] = errors
-                request.result["path"] = ruleTypesMap
             }
         }
     }
