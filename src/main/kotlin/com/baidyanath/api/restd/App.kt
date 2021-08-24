@@ -1,8 +1,7 @@
 package com.baidyanath.api.restd
 
 import com.baidyanath.api.restd.data.Service
-import com.baidyanath.api.restd.domain.BaseEntityRequest
-import com.baidyanath.api.restd.domain.BasePathConventionRequest
+import com.baidyanath.api.restd.domain.Request
 import com.baidyanath.api.restd.rules.BaseEntity
 import com.baidyanath.api.restd.rules.BasePathConvention
 import com.baidyanath.api.restd.rules.LowerCase
@@ -36,13 +35,10 @@ private fun applyRules(
     version: Int
 ) {
     // Check first rule in naming convention
-    val basePathConventionRequest = BasePathConventionRequest(result, endPoints, version)
-    BasePathConvention.check(basePathConventionRequest)
-
-    val baseEntityRequest = BaseEntityRequest(result, endPoints, version)
-    BaseEntity.check(baseEntityRequest)
-
-    LowerCase.check(baseEntityRequest)
+    Request(result, endPoints, version)
+        .apply(BasePathConvention::check)
+        .apply(BaseEntity::check)
+        .apply(LowerCase::check)
 }
 
 private fun displayResult(result: MutableMap<String, MutableMap<String, MutableList<Any>>>) {

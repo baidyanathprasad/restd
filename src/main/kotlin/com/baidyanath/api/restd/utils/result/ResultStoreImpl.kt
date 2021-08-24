@@ -1,31 +1,24 @@
 package com.baidyanath.api.restd.utils.result
 
-import com.baidyanath.api.restd.domain.BaseEntityRequest
+import com.baidyanath.api.restd.domain.Request
 import com.baidyanath.api.restd.domain.ErrorResponse
 import com.baidyanath.api.restd.domain.ErrorType
 
-object ResultStoreImpl : ResultStore<BaseEntityRequest> {
+object ResultStoreImpl : ResultStore<Request> {
 
-    override fun add(request: BaseEntityRequest, error: String, type: String) {
-        var ruleTypesMap = request.result["path"]
-        if (ruleTypesMap == null) {
-            ruleTypesMap = mutableMapOf()
-            request.result["path"] = ruleTypesMap
+    override fun add(request: Request, errors: Set<String>, type: String, value: String) {
+        val ruleTypesMap = request.result[type] ?: mutableMapOf()
+
+        val existingErrors = ruleTypesMap[value] ?: mutableListOf()
+        val errorsResponse = errors.map { error ->
+            ErrorResponse(
+                description = error,
+                type = ErrorType.HIGH
+            )
         }
+        existingErrors.addAll(errorsResponse)
 
-        var errors = ruleTypesMap[type]
-        val errorResponse = ErrorResponse(
-            description = error,
-            type = ErrorType.HIGH
-        )
-
-        if (errors == null) {
-            errors = mutableListOf(errorResponse)
-        } else {
-            errors.add(errorResponse)
-        }
-
-        ruleTypesMap[type] = errors
-        request.result["path"] = ruleTypesMap
+        ruleTypesMap[value] = existingErrors
+        request.result[type] = ruleTypesMap
     }
 }

@@ -2,17 +2,22 @@ package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.Configs
 import com.baidyanath.api.restd.configs.PATH_NAME_SHOULD_BE_IN_LOWER_CASE
-import com.baidyanath.api.restd.domain.BaseEntityRequest
+import com.baidyanath.api.restd.domain.Request
 import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 
-object LowerCase : Rule<BaseEntityRequest> {
+object LowerCase : Rule<Request> {
 
-    override fun check(request: BaseEntityRequest) {
+    override fun check(request: Request) {
         request.endPoints.forEach { endPoint ->
             val (isValid, _, error )= pathIsLowerCase(endPoint)
 
             if(!isValid) {
-                ResultStoreImpl.add(request = request, error = error, type = endPoint)
+                ResultStoreImpl.add(
+                    request = request,
+                    errors = setOf(error),
+                    type = "path",
+                    value = endPoint
+                )
             }
         }
     }

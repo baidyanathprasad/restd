@@ -2,42 +2,25 @@ package com.baidyanath.api.restd.rules
 
 import com.baidyanath.api.restd.configs.ENTITY_NAME_NOT_FOUND
 import com.baidyanath.api.restd.configs.ENTITY_NAME_SHOULD_BE_PLURAL
-import com.baidyanath.api.restd.domain.BaseEntityRequest
-import com.baidyanath.api.restd.domain.ErrorResponse
-import com.baidyanath.api.restd.domain.ErrorType
+import com.baidyanath.api.restd.domain.Request
+import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 
 /**
  * Basic Entity check for in the end points.
  */
-object BaseEntity: Rule<BaseEntityRequest> {
+object BaseEntity: Rule<Request> {
 
-    override fun check(request: BaseEntityRequest) {
+    override fun check(request: Request) {
         request.endPoints.forEach {
             val (isValid, pathName, currentErrors) = checkEntityNamePresent(it, request.version)
 
             if (!isValid) {
-                var ruleTypesMap = request.result["path"]
-                if (ruleTypesMap == null) {
-                    ruleTypesMap = mutableMapOf()
-                    request.result["path"] = ruleTypesMap
-                }
-                var errors = ruleTypesMap[pathName]
-
-                val errorsResponse = currentErrors.map { error ->
-                    ErrorResponse(
-                        description = error,
-                        type = ErrorType.HIGH
-                    )
-                }
-
-                if (errors == null) {
-                    errors = mutableListOf(errorsResponse)
-                } else {
-                   errors.addAll(errorsResponse)
-                }
-                ruleTypesMap[pathName] = errors
-
-                request.result["path"] = ruleTypesMap
+                ResultStoreImpl.add(
+                    request = request,
+                    errors = currentErrors.toSet(),
+                    type = "path",
+                    value = pathName
+                )
             }
         }
     }

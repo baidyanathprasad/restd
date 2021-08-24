@@ -2,5 +2,5 @@ package com.baidyanath.api.restd.utils.result
 
 interface ResultStore<T> {
 
-    fun add(request: T, error: String, type: String)
+    fun add(request: T, errors: Set<String>, type: String, value: String)
 }
