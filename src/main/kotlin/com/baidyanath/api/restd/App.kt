@@ -9,6 +9,11 @@ import com.baidyanath.api.restd.utils.calculation.CalculateError
 import com.baidyanath.api.restd.utils.display.DisplayInFile
 import com.baidyanath.api.restd.utils.display.DisplayResult
 
+/**
+ * Input file can be either of the file or the url in the below format: -
+ * val path = "src/main/resources/swagger-sample.json"
+ * val url = http://localhost:8000/swagger-sample.json
+ */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         throw RuntimeException("Path must be present to run the project")
@@ -16,17 +21,19 @@ fun main(args: Array<String>) {
 
     val result = mutableMapOf<String, MutableMap<String, MutableList<Any>>>()
 
-    // val path = "src/main/resources/swagger-sample.json"
-    // val url = http://localhost:8000/swagger-sample.json
-
     val (endPoints, version) = Service.parseJson(args[0]) to 1 // version as 1
     if(endPoints.isEmpty()) {
         println("No End Points Found")
         return
     }
 
+    val requestKeys = Service.getRequestBodiesKeys()
+
+    println(requestKeys)
+
     applyRules(result = result, endPoints = endPoints, version = version)
     displayResult(result = result)
+
 }
 
 private fun applyRules(
@@ -34,7 +41,6 @@ private fun applyRules(
     endPoints: Set<String>,
     version: Int
 ) {
-    // Check first rule in naming convention
     Request(result, endPoints, version)
         .apply(BasePathConvention::check)
         .apply(BaseEntity::check)
@@ -42,11 +48,11 @@ private fun applyRules(
 }
 
 private fun displayResult(result: MutableMap<String, MutableMap<String, MutableList<Any>>>) {
-    // Display Result
     DisplayResult.run(result)
 
     val totalErrors = CalculateError.run(result)
     result["errors"] = mutableMapOf("count" to mutableListOf<Any>(totalErrors))
+
     DisplayInFile.run(result)
 }
 
