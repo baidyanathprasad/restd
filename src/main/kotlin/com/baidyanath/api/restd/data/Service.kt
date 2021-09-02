@@ -1,7 +1,6 @@
 package com.baidyanath.api.restd.data
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.serialization.mapper.Mapper
 import shadow.org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URL
@@ -19,8 +18,6 @@ object Service {
             val file = File("swagger-sample.json")
 
             FileUtils.copyURLToFile(url, file)
-
-            val map = Mapper.decodeFromString(file.readText())
 
             if (treeMap == null) {
                 treeMap = ObjectMapper().readValue(file.readText(), Map::class.java) as MutableMap<String, Any>

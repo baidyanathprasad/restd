@@ -3,8 +3,9 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     // Core dependencies
-    ext.kotlinVersion = '1.5.0'
-    ext.klaxonVersion = '5.5'
+    ext.kotlinVersion = '1.5.21'
+    ext.jacksonVersion = '2.12.5'
+
 
     // Test dependencies
     ext.shadowVersion = '5.2.0'
@@ -20,6 +21,7 @@ buildscript {
 }
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 apply plugin: 'kotlin'
@@ -58,11 +60,9 @@ sourceCompatibility = 1.8
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
-    implementation("tz.co.asoft:kotlinx-serialization-mapper:0.0.71")
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.8'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
-    implementation "com.beust:klaxon:$klaxonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 }
 
 compileKotlin {
