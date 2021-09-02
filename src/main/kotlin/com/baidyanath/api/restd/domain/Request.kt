@@ -1,7 +1,10 @@
 package com.baidyanath.api.restd.domain
 
+/**
+ * Here key could be anything like endpoints, request body, response body, etc.
+ */
 data class Request(
     val result: MutableMap<String, MutableMap<String, MutableList<Any>>>,
-    val endPoints: Set<String>,
-    val version: Int
+    val keys: Set<String>,
+    val version: Int = Int.MIN_VALUE
 )

@@ -10,7 +10,7 @@ import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 object BasePathConvention: Rule<Request> {
 
     override fun check(request: Request) {
-        request.endPoints.forEach {
+        request.keys.forEach {
             val (isValid, pathName, error) = checkBasePathConvention(it, request.version)
 
             if (!isValid) {

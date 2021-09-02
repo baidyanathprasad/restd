@@ -11,7 +11,7 @@ import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 object BaseEntity: Rule<Request> {
 
     override fun check(request: Request) {
-        request.endPoints.forEach {
+        request.keys.forEach {
             val (isValid, pathName, currentErrors) = checkEntityNamePresent(it, request.version)
 
             if (!isValid) {

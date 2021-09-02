@@ -12,6 +12,11 @@ object Service {
     private val keys = mutableListOf<String>()
     private val requestBody = linkedMapOf<String, Any>()
 
+    /**
+     * Method to parse the JSON and stores all others components that will be used later.
+     *
+     * By default, it returns list of paths, but for getting paths, use #getPaths() method.
+     */
     fun parseJson(path: String): Set<String> {
         return try {
             val url = URL(path)
@@ -83,6 +88,7 @@ object Service {
                 val map: LinkedHashMap<String, Any> = value as LinkedHashMap<String, Any>
                 getKeyObject(map, keys)
             }
+
             keys.add(key)
         }
         return keys
