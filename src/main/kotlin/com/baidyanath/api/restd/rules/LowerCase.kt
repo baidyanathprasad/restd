@@ -8,7 +8,7 @@ import com.baidyanath.api.restd.utils.result.ResultStoreImpl
 object LowerCase : Rule<Request> {
 
     override fun check(request: Request) {
-        request.endPoints.forEach { endPoint ->
+        request.keys.forEach { endPoint ->
             val (isValid, _, error )= pathIsLowerCase(endPoint)
 
             if(!isValid) {
@@ -26,7 +26,7 @@ object LowerCase : Rule<Request> {
         var isValid = true
 
         if (path.isNotEmpty()) path.forEach { char ->
-            isValid = char in 'a'..'z' || char in '0'..'9' || char in Configs.allowedCharsInPath
+            isValid = isValid && char in 'a'..'z' || char in '0'..'9' || char in Configs.allowedCharsInPath
         } else isValid = false
 
         if (isValid) {
